@@ -20,6 +20,7 @@ data Type : Set where
   _+_  : Type → Type → Type
   _⇒_  : Type → Type → Type
   _-_  : Type → Type → Type
+  ¬_   : Type → Type
 
 data Bool : Set where
   T : Bool
@@ -63,6 +64,7 @@ data _⊢_ : Context → Judgement → Set where
   right : ∀ {P Γ A₁ A₂} → Γ ⊢ A₂ % P → Γ ⊢ (product₂ (not P) A₁ A₂) % P
   ƛ_    : ∀ {P Γ A₁ A₂} → Γ , A₁ % P ⊢ A₂ % P → Γ ⊢ (implies P A₁ A₂) % P
   _·_   : ∀ {P Γ A₁ A₂} → Γ ⊢ A₁ % (not P) → Γ ⊢ A₂ % P → Γ ⊢ (implies (not P) A₁ A₂) % P
+  ♩_    : ∀ {P Γ A} → Γ ⊢ A % (not P) → Γ ⊢ ¬ A % P
 
 ex-proj-a : ∀ {A₁ A₂} → ∅ ⊢ ((A₁ × A₂) ⇒ A₁) % T
 ex-proj-a = ƛ (letcc (throw (left (` Z)) (` (S Z))))
@@ -88,3 +90,18 @@ ex-mp' =
 
 ex-falsity : ∅ ⊢ void + void × void + (unit + unit ⇒ void) % F
 ex-falsity = ⟨ ⟨⟩ , ⟨ left ⟨⟩ , left ⟨⟩ · ⟨⟩ ⟩ ⟩
+
+ex-dne-not : ∀ {A} → ∅ , ¬ (¬ A) % T ⊢ A % T
+ex-dne-not = letcc (throw (` (S Z)) (♩ (♩ (` Z))))
+
+ex-not-false-implication : ∀ {A} → ∅ , A ⇒ void % T ⊢ ¬ A % T
+ex-not-false-implication = ♩ letcc (throw (` (S Z)) (` Z · ⟨⟩))
+
+ex-false-implication-not : ∀ {A} → ∅ , ¬ A % T ⊢ A ⇒ void % T
+ex-false-implication-not = ƛ letcc (throw (` (S S Z)) (♩ ` (S Z)))
+
+ex-dne-implication : ∀ {A} → ∅ , (A ⇒ void) ⇒ void % T ⊢ A % T
+ex-dne-implication =
+  letcc (throw (` (S Z)) (
+    letcc (throw (` Z) (ƛ letcc (throw (` (S S S Z)) (` (S Z))))) · ⟨⟩
+  ))
