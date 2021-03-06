@@ -64,21 +64,21 @@ data _⊢_ : Context → Judgement → Set where
   ƛ_    : ∀ {P Γ A₁ A₂} → Γ , A₁ % P ⊢ A₂ % P → Γ ⊢ (implies P A₁ A₂) % P
   _·_   : ∀ {P Γ A₁ A₂} → Γ ⊢ A₁ % (not P) → Γ ⊢ A₂ % P → Γ ⊢ (implies (not P) A₁ A₂) % P
 
-ex1 : ∀ {A₁ A₂} → ∅ ⊢ ((A₁ × A₂) ⇒ A₁) % T
-ex1 = ƛ (letcc (throw (left (` Z)) (` (S Z))))
+ex-proj-a : ∀ {A₁ A₂} → ∅ ⊢ ((A₁ × A₂) ⇒ A₁) % T
+ex-proj-a = ƛ (letcc (throw (left (` Z)) (` (S Z))))
 
-ex2 : ∀ {A₁ A₂} → ∅ ⊢ ((A₁ + A₂) - A₁) % F
-ex2 = ƛ (letcc (throw (left (` Z)) (` (S Z))))
+ex-proj-b : ∀ {A₁ A₂} → ∅ ⊢ ((A₁ + A₂) - A₁) % F
+ex-proj-b = ƛ (letcc (throw (left (` Z)) (` (S Z))))
 
-ex3 : ∀ {A₁ A₂ B} → ∅ ⊢ ((A₁ + A₂) ⇒ (A₁ ⇒ B) ⇒ (A₂ ⇒ B) ⇒ B) % T
-ex3 =
+ex-case : ∀ {A₁ A₂ B} → ∅ ⊢ ((A₁ + A₂) ⇒ (A₁ ⇒ B) ⇒ (A₂ ⇒ B) ⇒ B) % T
+ex-case =
   ƛ ƛ ƛ letcc (throw (` (S S S Z)) ⟨
     letcc (throw (` (S S S Z)) (` Z · ` (S Z))) ,
     letcc (throw (` (  S S Z)) (` Z · ` (S Z) ))
   ⟩)
 
-ex4 : ∀ {A₁ A₂} → ∅ ⊢ ((A₁ ⇒ A₂) × A₁ ⇒ A₂ × unit) % T
-ex4 =
+ex-mp' : ∀ {A₁ A₂} → ∅ ⊢ ((A₁ ⇒ A₂) × A₁ ⇒ A₂ × unit) % T
+ex-mp' =
   ƛ letcc (throw (` Z) ⟨
     letcc (throw (` (S S Z)) (
       left (letcc (throw (right (` Z)) (` (S S S Z)) ) · (` Z))
@@ -86,5 +86,5 @@ ex4 =
     ⟨⟩
   ⟩)
 
-ex5 : ∅ ⊢ void + void × void + (unit + unit ⇒ void) % F
-ex5 = ⟨ ⟨⟩ , ⟨ left ⟨⟩ , left ⟨⟩ · ⟨⟩ ⟩ ⟩
+ex-falsity : ∅ ⊢ void + void × void + (unit + unit ⇒ void) % F
+ex-falsity = ⟨ ⟨⟩ , ⟨ left ⟨⟩ , left ⟨⟩ · ⟨⟩ ⟩ ⟩
