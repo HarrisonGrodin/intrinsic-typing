@@ -1,13 +1,17 @@
 module Classical where
 
 infix  4 _⊢_
+infix  6 _%_
 infix  4 _∋_
 infixl 5 _,_
 infix  9 S_
 
 infix  5 ƛ_
 infixl 7 _·_
+infixr 8 _+_
+infixr 9 _×_
 infixr 7 _⇒_
+infixr 7 _-_
 
 data Type : Set where
   unit : Type
@@ -81,3 +85,6 @@ ex4 =
     )) ,
     ⟨⟩
   ⟩)
+
+ex5 : ∅ ⊢ void + void × void + (unit + unit ⇒ void) % F
+ex5 = ⟨ ⟨⟩ , ⟨ left ⟨⟩ , left ⟨⟩ · ⟨⟩ ⟩ ⟩
